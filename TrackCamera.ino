@@ -37,7 +37,16 @@
 const char* ssid = "linksys-25";
 const char* password = "msxkhxwa";
 
+//https://github.com/RoboticsBrno/ESP32-Arduino-Servo-Library The ESP32 Arduino Servo Library makes it easier to control a servo motor with your ESP32, using the Arduino IDE. 
+#include <Servo.h> //WILL NOT WORK with the Standard 8266 library or ESP32Servo libraries..
+const int fwdPin = 2;  //Forward Motor Pin
+const int SteerPin = 12;  //Steering Servo Pin
 
+Servo Steerservo;
+Servo SpeedServo;
+
+
+ 
 typedef struct {
         size_t size; //number of values used for filtering
         size_t index; //current value index
@@ -224,6 +233,16 @@ static esp_err_t cmd_handler(httpd_req_t *req){
  
     if(!strcmp(variable, "LRSCROLL")) {
         Serial.print("LRSCROLL:");Serial.println(val);
+        if (!Steerservo.attached()) {
+            Steerservo.attach(  //see https://github.com/RoboticsBrno/ESP32-Arduino-Servo-Library/blob/master/src/Servo.h#L73
+                     SteerPin, 
+                     2,   // super important not to use auto channels as the camera uses 1 and 0?
+                     0,
+                     180
+                     );
+          }
+        Steerservo.write(val);
+       
     }
     else if(!strcmp(variable, "SPEED")) {
         Serial.print("SPEED:");Serial.println(val);
@@ -367,13 +386,7 @@ void startFULL_CameraServer(){
         .user_ctx  = NULL
     };
 
-/*    httpd_uri_t capture_uri = {
-        .uri       = "/capture",
-        .method    = HTTP_GET,
-        .handler   = capture_handler,
-        .user_ctx  = NULL
-    };
-*/
+
    httpd_uri_t stream_uri = {
         .uri       = "/stream",
         .method    = HTTP_GET,
@@ -383,21 +396,8 @@ void startFULL_CameraServer(){
 
 
     ra_filter_init(&ra_filter, 20);
-    
-/*//    mtmn_config.min_face = 80;
-//    mtmn_config.pyramid = 0.7;
-//    mtmn_config.p_threshold.score = 0.6;
-//    mtmn_config.p_threshold.nms = 0.7;
-    mtmn_config.r_threshold.score = 0.7;
-    mtmn_config.r_threshold.nms = 0.7;
-    mtmn_config.r_threshold.candidate_number = 4;
-    mtmn_config.o_threshold.score = 0.7;
-    mtmn_config.o_threshold.nms = 0.4;
-    mtmn_config.o_threshold.candidate_number = 1;
-    
-    //face_id_init(&id_list, FACE_ID_SAVE_NUMBER, ENROLL_CONFIRM_TIMES);
-*/    
     Serial.printf("Starting web server on port: '%d'\n", config.server_port);
+ 
     if (httpd_start(&camera_httpd, &config) == ESP_OK) {
         httpd_register_uri_handler(camera_httpd, &index_uri);
         httpd_register_uri_handler(camera_httpd, &cmd_uri);
@@ -416,6 +416,7 @@ void startFULL_CameraServer(){
 
 
 void setup() {
+    
   WRITE_PERI_REG(RTC_CNTL_BROWN_OUT_REG, 0); //disable brownout detector
  
   Serial.begin(115200);
@@ -486,5 +487,5 @@ void setup() {
 }
 
 void loop() {
-  delay(1000);Serial.print("!");
+  delay(1000);
 }

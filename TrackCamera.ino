@@ -187,7 +187,7 @@ static esp_err_t stream_handler(httpd_req_t *req){
     return res;
 }
 
-int32_t SigStrength(void){
+float SigStrength(void){
   return WiFi.RSSI();
      }
 

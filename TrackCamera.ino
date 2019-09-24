@@ -17,7 +17,7 @@
 
 #include "esp_camera.h"
 #include <WiFi.h>
-#include "camera_index.h"
+#include "camera_index.h"  // this is the compressed HTML WEB file
 
 #include "esp_timer.h"
 #include "img_converters.h"
@@ -31,7 +31,7 @@
 //#include "fd_forward.h"
 //#include "fr_forward.h"
 
-#include "CameraPinouts.cpp"
+#include "CameraPinouts.cpp" // moved to a separate file for convenience
 
 //Replace with your network credentials
 const char* ssid = "linksys-25";
@@ -41,9 +41,14 @@ const char* password = "msxkhxwa";
 #include <Servo.h> //WILL NOT WORK with the Standard 8266 library or ESP32Servo libraries..
 const int fwdPin = 2;  //Forward Motor Pin
 const int SteerPin = 12;  //Steering Servo Pin
+const int UDPin = 13;  //UP down Servo Pin
+const int SpeedPin = 15;  //Steering Servo Pin
 
 Servo Steerservo;
+Servo UDServo;
 Servo SpeedServo;
+
+unsigned long SerialTimer;
 
 
  
@@ -163,10 +168,17 @@ static esp_err_t stream_handler(httpd_req_t *req){
         last_frame = fr_end;
         frame_time /= 1000;
         uint32_t avg_frame_time = ra_filter_run(&ra_filter, frame_time);
-        Serial.printf("MJPG: %u B AVG:%.1ffps\n",
+         if ((millis()-SerialTimer)>=2000){
+            Serial.printf("LOOP MJPG: %u B AVG:%.1ffps WiFi:%f\n",
             (uint32_t)(_jpg_buf_len),
-            1000.0 / avg_frame_time
+            1000.0 / avg_frame_time,
+            SigStrength()
             ); 
+            //Serial.print(F(" WiFi strength:"));
+            //Serial.println(SigStrength());
+            SerialTimer=millis();
+            }
+        
         
        
     }
@@ -175,7 +187,9 @@ static esp_err_t stream_handler(httpd_req_t *req){
     return res;
 }
 
-
+int32_t SigStrength(void){
+  return WiFi.RSSI();
+     }
 
 void startCameraServer(){
   httpd_config_t config = HTTPD_DEFAULT_CONFIG();
@@ -244,13 +258,28 @@ static esp_err_t cmd_handler(httpd_req_t *req){
         Steerservo.write(val);
        
     }
+    else if(!strcmp(variable, "UDSCROLL")) {
+        Serial.print("UDSCROLL:");Serial.println(val);
+        if (!UDServo.attached()) {
+            UDServo.attach(  //see https://github.com/RoboticsBrno/ESP32-Arduino-Servo-Library/blob/master/src/Servo.h#L73
+                     UDPin, 
+                     3,   // super important not to use auto channels as the camera uses 1 and 0?
+                     0,
+                     180
+                     );
+          }
+        UDServo.write(val);
+       
+    }
+    
     else if(!strcmp(variable, "SPEED")) {
         Serial.print("SPEED:");Serial.println(val);
+        //need speed in here
           }
     else if(!strcmp(variable, "framesize")) {
         if(s->pixformat == PIXFORMAT_JPEG) res = s->set_framesize(s, (framesize_t)val);
         Serial.print("frame size rx:");Serial.println(val);
-    }
+        }
     else if(!strcmp(variable, "quality")) res = s->set_quality(s, val);
     else if(!strcmp(variable, "contrast")) res = s->set_contrast(s, val);
     else if(!strcmp(variable, "brightness")) res = s->set_brightness(s, val);
@@ -482,10 +511,11 @@ void setup() {
  
   Serial.print("Camera Stream Ready! Go to: http://");
   Serial.print(WiFi.localIP());
-  
+  SerialTimer=millis();
 
 }
 
 void loop() {
+ 
   delay(1000);
 }

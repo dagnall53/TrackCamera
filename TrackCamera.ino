@@ -250,7 +250,7 @@ static esp_err_t cmd_handler(httpd_req_t *req){
         if (!Steerservo.attached()) {
             Steerservo.attach(  //see https://github.com/RoboticsBrno/ESP32-Arduino-Servo-Library/blob/master/src/Servo.h#L73
                      SteerPin, 
-                     2,   // super important not to use auto channels as the camera uses 1 and 0?
+                     2,   // super important not to use auto channels as the camera uses 1 and 0
                      0,
                      180
                      );
@@ -263,7 +263,7 @@ static esp_err_t cmd_handler(httpd_req_t *req){
         if (!UDServo.attached()) {
             UDServo.attach(  //see https://github.com/RoboticsBrno/ESP32-Arduino-Servo-Library/blob/master/src/Servo.h#L73
                      UDPin, 
-                     3,   // super important not to use auto channels as the camera uses 1 and 0?
+                     3,   // super important not to use auto channels as the camera uses 1 and 0
                      0,
                      180
                      );
@@ -274,7 +274,15 @@ static esp_err_t cmd_handler(httpd_req_t *req){
     
     else if(!strcmp(variable, "SPEED")) {
         Serial.print("SPEED:");Serial.println(val);
-        //need speed in here
+         if (!SpeedServo.attached()) {
+            SpeedServo.attach(  //see https://github.com/RoboticsBrno/ESP32-Arduino-Servo-Library/blob/master/src/Servo.h#L73
+                     SpeedPin, 
+                     4,   // super important not to use auto channels as the camera uses 1 and 0
+                     0,
+                     180
+                     );
+          }
+        SpeedServo.write(90-(val*2)); // speed 90 = mid = stop
           }
     else if(!strcmp(variable, "framesize")) {
         if(s->pixformat == PIXFORMAT_JPEG) res = s->set_framesize(s, (framesize_t)val);

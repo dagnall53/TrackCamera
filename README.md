@@ -22,5 +22,7 @@
   - Quick version (from RobotOne)(https://robotzero.one/esp32-cam-custom-html/)
   –&nbsp; <a href="https://gchq.github.io/CyberChef/#recipe=Gzip('Dynamic%20Huffman%20Coding','index.html.gz','',false)To_Hex('0x')Split('0x',',0x')&amp;input=PCFkb2N0eXBlIGh0bWw%2BCjxodG1sPgogICAgPGhlYWQ%2BCiAgICAgICAgPG1ldGEgY2hhcnNldD0idXRmLTgiPgogICAgICAgIDxtZXRhIG5hbWU9InZpZXdwb3J0IiBjb250ZW50PSJ3aWR0aD1kZXZpY2Utd2lkdGgsaW5pdGlhbC1zY2FsZT0xIj4KICAgICAgICA8dGl0bGU%2BUm9ib3QgWmVybyBPbmUgV2FzIEhlcmU8L3RpdGxlPgogICAgPC9oZWFkPgogICAgPGJvZHk%2BCiAgICAgICAgPGRpdiBpZD0ibG9nbyI%2BCiAgICAgICAgICAgIDxsYWJlbCBmb3I9Im5hdi10b2dnbGUtY2IiIGlkPSJuYXYtdG9nZ2xlIj4mIzk3NzY7Jm5ic3A7Jm5ic3A7VG9nZ2xlIHNldHRpbmdzPC9sYWJlbD4KICAgICAgICAgPC9kaXY%2BCiAgICA8L2JvZHk%2BCjwvaHRtbD4" target="_blank" rel="noopener">Click here</a> to open the CyberChef online tool, edit or paste your HTML in the Input field. The code you need to paste into the Arduino IDE will appear in the Output area. Copy all of it <strong>except</strong> the first comma, paste into camera_index.h.
   - I store my  HTML in the GIThub so it can be modifiied etc, then save the compressed data as 'download.dat'. This stores the compressed version with the the preceding ',' which needs to be removed before copying into camera_index.h line 6.
+    - Read the 'Length variable' in the CyberChef Output box, 
+    - Copy this (here 19045) to camera_index.h like this: #define index_html_gz_len 19045
   
 

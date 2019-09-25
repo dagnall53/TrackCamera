@@ -1,3 +1,4 @@
+
 /*********
   Rui Santos
   Complete project details at https://RandomNerdTutorials.com
@@ -34,15 +35,15 @@
 #include "CameraPinouts.cpp" // moved to a separate file for convenience
 
 //Replace with your network credentials
-const char* ssid = "linksys-25";
-const char* password = "msxkhxwa";
+const char* ssid = "SSID";
+const char* password = "PW";
 
 //https://github.com/RoboticsBrno/ESP32-Arduino-Servo-Library The ESP32 Arduino Servo Library makes it easier to control a servo motor with your ESP32, using the Arduino IDE. 
 #include <Servo.h> //WILL NOT WORK with the Standard 8266 library or ESP32Servo libraries..
-const int fwdPin = 2;  //Forward Motor Pin
-const int SteerPin = 12;  //Steering Servo Pin
-const int UDPin = 13;  //UP down Servo Pin
-const int SpeedPin = 15;  //Steering Servo Pin
+
+const int SteerPin = 12;  //L/R  Steering Servo Pin
+const int UDPin = 13;     //Up / Down     Servo Pin
+const int SpeedPin = 15;  //Speed         Servo Pin
 
 Servo Steerservo;
 Servo UDServo;

@@ -1,7 +1,19 @@
 # TrackCamera
  ESP32 Camera based on https://github.com/bitluni/ESP32CameraI2S/tree/master/ESP32_I2S_Camera
+   - Modified to provide three Servo controls, nominally Speed, Up/Down and Left/Right.
+   - Using Pins 12, 13, 15
 
-Needs https://github.com/RoboticsBrno/ESP32-Arduino-Servo-Library installed to make servos work.
-(because this library allows you to select the timer channel to use.. but ESP32Servo does not).
+# Dependencies ETC:
+## Install Libraries: 
+ - https://github.com/RoboticsBrno/ESP32-Arduino-Servo-Library 
+ - This must be installed to make servos work because this library allows you to select the timer channel to use.. but the 'standard ESP32Servo' does not.
+ 
+## Arduino Settings: 
+   - Board: "ESP32 Wrover Module"
+   - Partition Scheme Default" or "Huge APP (3Mb No OTA)"
+   - Core Debug Level "none"
 
-V3 working with Steering pin servo output using pin 12 
+### To Program ESP32Cam board 
+   - GPIO 0 must be connected to GND to upload a sketch
+   - After connecting GPIO 0 to GND, press the ESP32-CAM on-board RESET button to put your board in flashing mode
+

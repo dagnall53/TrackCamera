@@ -4,8 +4,9 @@
    - Using Pins 12, 13, 15
 
 # Dependencies ETC:
-## Install Libraries: 
- - https://github.com/RoboticsBrno/ESP32-Arduino-Servo-Library 
+## Install Libraries:
+ - Include ESP32: (Additional boards Manager URL https://dl.espressif.com/dl/package_esp32_index.json )
+ - Add alternate Servo Library : https://github.com/RoboticsBrno/ESP32-Arduino-Servo-Library 
  - This must be installed to make servos work because this library allows you to select the timer channel to use.. but the 'standard ESP32Servo' does not.
  
 ## Arduino Settings: 

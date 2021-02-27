@@ -26,7 +26,7 @@
 #include "fb_gfx.h"
 #include "soc/soc.h" //disable brownout problems
 #include "soc/rtc_cntl_reg.h"  //disable brownout problems
-#include "dl_lib.h"
+#include "dl_lib.h"  // possibly disable this to prevent error 'dl_matrix3du_t' was not declared in this scope
 #include "esp_http_server.h"
 
 //#include "fd_forward.h"
